@@ -19,7 +19,6 @@ class Login extends Component {
   };
 
   registerSubmit = async (e) => {
-    // use routing to save a new user in mongoDB
     // this.props.setIsLogin(true);
     // localStorage.setItem("isLogedIn", JSON.stringify({ isLogin: true }));
     // e.preventDefault();
