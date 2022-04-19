@@ -101,4 +101,3 @@ class EditNote extends Component {
 }
 
 export default EditNote;
-

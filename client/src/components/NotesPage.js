@@ -116,4 +116,3 @@ class NotesPage extends Component {
 }
 
 export default withRouter(NotesPage);
-
