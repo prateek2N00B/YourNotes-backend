@@ -13,7 +13,6 @@ class Home extends Component {
     const res = await axios.get("/notes-api", {
       headers: { Authorization: token },
     });
-    console.log(res.data);
     this.setState({ ...this.state, notes: res.data });
   };
 

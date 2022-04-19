@@ -3,7 +3,6 @@ import {
   BrowserRouter as Router,
   Route,
   Switch,
-  useRouteMatch,
   withRouter,
 } from "react-router-dom";
 import axios from "axios";
@@ -38,7 +37,6 @@ class NotesPage extends Component {
     const res = await axios.get("/notes-api", {
       headers: { Authorization: token },
     });
-    console.log(res.data);
     this.setState({ ...this.state, notes: res.data });
   };
 
@@ -48,9 +46,8 @@ class NotesPage extends Component {
       await this.getNotes(token);
     }
 
-    if (this.props.location.pathname == "/edit") {
+    if (this.props.location.pathname === "/edit") {
       if (this.state.notes.length > 0) {
-        console.log("inside");
         this.setState({ ...this.state, activeNoteId: this.state.notes[0]._id });
         let path = this.props.match.url + "/" + this.state.activeNoteId;
         this.props.history.push(path);
@@ -70,7 +67,6 @@ class NotesPage extends Component {
   };
 
   addNote = async () => {
-    console.log("clicked");
     try {
       const token = localStorage.getItem("tokenStore");
       if (token) {

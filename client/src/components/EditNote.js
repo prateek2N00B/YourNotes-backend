@@ -22,7 +22,6 @@ class EditNote extends Component {
       const res = await axios.get(`/notes-api/${this.props.match.params.id}`, {
         headers: { Authorization: token },
       });
-      console.log(res);
       this.setState({
         ...this.state,
         id: res.data._id,
@@ -37,7 +36,7 @@ class EditNote extends Component {
   }
 
   componentDidUpdate() {
-    if (this.props.match.params.id != this.state.id) {
+    if (this.props.match.params.id !== this.state.id) {
       this.getNote();
     }
   }

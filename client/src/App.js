@@ -13,7 +13,6 @@ class App extends Component {
   }
 
   setIsLogin = (val) => {
-    console.log(val);
     this.setState({ ...this.state, isLogin: val });
   };
 

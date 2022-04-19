@@ -1,6 +1,4 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import axios from "axios";
 
 class Sidebar extends Component {
   constructor(props) {
@@ -23,10 +21,10 @@ class Sidebar extends Component {
 
         <div className="sidebar-titles">
           {this.props.notes.map((note) => {
-            let temp = this.props.id == note._id;
+            let temp = this.props.id === note._id;
             return (
               <div
-                id={note._id}
+                key={note._id}
                 className={temp ? "sidebar-title-highlighted" : "sidebar-title"}
                 onClick={() => this.titleClick(note._id)}
               >
