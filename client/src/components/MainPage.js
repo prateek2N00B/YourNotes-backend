@@ -16,10 +16,10 @@ class MainPage extends Component {
     return (
       <Router>
         <div className="notes-page">
-          <Nav setIsLogin={this.props.setIsLogin} />
+          <Nav setLoginDetails={this.props.setLoginDetails} />
           <section>
             <Route path="/" component={Home} exact />
-            <Route path="/edit" component={NotesPage} />
+            <Route path="/edit" component={() => (<NotesPage username={this.props.username}/>)} />
             {/* <Route path="/create" component={temp_CreateNotes} exact /> */}
           </section>
         </div>

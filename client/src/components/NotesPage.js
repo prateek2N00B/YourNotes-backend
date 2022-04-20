@@ -101,6 +101,7 @@ class NotesPage extends Component {
             addNote={this.addNote}
             id={this.state.activeNoteId}
             notes={this.state.notes}
+            username={this.props.username}
           />
           <section>
             <Route path={`${path}/:id`} component={EditNote} exact />

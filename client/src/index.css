@@ -154,28 +154,54 @@ code {
   flex-direction: row;
 }
 
+/* Sidebar  */
 .sidebar-preview {
   width: 20%;
   max-width: 250px;
   height: 100vh;
   flex-direction: column;
-  background-color: #f8f4f4;
+  background-color: #f7f6f3;
 }
 
-.sidebar-top {
+.sidebar-header {
+  display: flex;
   align-items: center;
-  border-top: 20px;
+  padding: 0px 15px 0px 15px;
+  margin-bottom: 15px;
 }
 
-.sidebar-top:hover {
+.sidebar-header:hover {
   background-color: #f0e4e4;
 }
 
+.sidebar-user-icon {
+  text-transform: uppercase;
+  background: rgba(55, 53, 47, 0.4);
+  color: rgba(255, 255, 255, 0.9);
+  display: table;
+  border-radius: 3px;
+  padding: 3px;
+  font-size: 1.2rem;
+  width: 25px;
+  height: 18px;
+  line-height: 1;
+  text-align: center;
+  margin-left: 10px;
+  margin-right: 0px;
+}
+
 .sidebar-username {
-  color: #665f5f;
-  font-weight: 800px;
-  font-size: 18px;
+  color: #37352f;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 1.1rem;
+  font-weight: 600;
+  flex: 1;
+  width: 100%;
+  height: 48px;
   padding: 10px 26px;
+  padding-left: 8px;
 }
 
 .sidebar-titles {
@@ -183,23 +209,42 @@ code {
 }
 
 .sidebar-title {
-  color: #665f5f;
+  color: rgba(25, 23, 17, 0.6);
   padding: 5px 26px;
-  font-weight: 800px;
+  font-weight: 500;
+  font: "SF Pro Text";
+  align-items: center;
 }
 
 .sidebar-title-highlighted {
-  color: #665f5f;
+  color: #37352f;
   padding: 5px 26px;
-  font-weight: 800px;
-  background-color: #f0e4e4;
+  font-weight: 500;
+  font: "SF Pro Text";
+  background-color: rgba(55, 53, 47, 0.08);
 }
 
 .sidebar-title:hover {
-  background-color: #f0e4e4;
+  background-color: rgba(55, 53, 47, 0.08);
+  cursor: pointer;
 }
 
-.main-create-note {
+.sidebar-title-image {
+  height: 18px;
+  width: 14px;
+  margin-bottom: 5px;
+  margin-right: 10px;
+}
+
+.sidebar-title-plus-image {
+  height: 18px;
+  width: 18px;
+  margin-bottom: 5px;
+  margin-right: 5px;
+}
+
+/* editnote */
+.editnote {
   width: 100%;
   height: 100%;
   /* display: flex;
@@ -209,12 +254,12 @@ code {
   text-align: center; */
 }
 
-.main-create-note h2 {
+.editnote h2 {
   color: black;
   margin: 20px;
 }
 
-.main-create-note .main-create-notes-preview {
+.editnote .editnote-preview {
   display: flex;
   flex-direction: column;
   padding: 2em 3em;
@@ -222,20 +267,31 @@ code {
   width: 100%;
 }
 
-.main-create-notes-preview .main-create-notes-title {
+.editnote-preview .editnote-title {
   border: none;
   outline: none;
   justify-content: center;
-  width: 65%;
-  font-size: 35px;
-  font-weight: bold;
+  width: 70%;
+  font-size: 38px;
+  font-weight: 700;
   margin-bottom: 20px;
+  color: #0f2e53;
+  font: san-serif;
 }
 
-.main-create-notes-preview .main-create-notes-body {
+.editnote-preview .editnote-content {
   border: none;
   outline: none;
   justify-content: center;
-  width: 65%;
+  width: 70%;
+  background-color: #fafafa;
+  padding: 2em;
+  border-radius: 8px;
+  font-size: 16px;
+  font: san-serif;
+  font-weight: 400;
 }
 
+.editnote-content:focus {
+  background: #f5f6fb;
+}

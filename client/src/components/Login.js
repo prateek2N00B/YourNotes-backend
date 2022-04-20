@@ -19,10 +19,6 @@ class Login extends Component {
   };
 
   registerSubmit = async (e) => {
-    // this.props.setIsLogin(true);
-    // localStorage.setItem("isLogedIn", JSON.stringify({ isLogin: true }));
-    // e.preventDefault();
-
     e.preventDefault();
     try {
       const res = await axios.post("/users-api/register", {
@@ -44,25 +40,20 @@ class Login extends Component {
   };
 
   loginSubmit = async (e) => {
-    // use routing to login a user
-    // this.props.setIsLogin(true);
-    // localStorage.setItem("isLogedIn", JSON.stringify({ isLogin: true }));
-    // e.preventDefault();
-
     e.preventDefault();
     try {
       const res = await axios.post("/users-api/login", {
         email: this.state.email,
         password: this.state.password,
       });
+      localStorage.setItem("tokenStore", res.data.token);
+      this.props.setLoginDetails(true, res.data.username);
       this.setState({
         ...this.state,
         name: "",
         email: "",
         password: "",
       });
-      localStorage.setItem("tokenStore", res.data.token);
-      this.props.setIsLogin(true);
     } catch (err) {
       err.response.data.msg &&
         this.setState({ ...this.state, err: err.response.data.msg });

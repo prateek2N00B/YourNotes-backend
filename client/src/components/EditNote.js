@@ -66,13 +66,13 @@ class EditNote extends Component {
   render() {
     // console.log("MainCreateNotes -- render");
     return (
-      <div className="main-create-note">
+      <div className="editnote">
         <form onSubmit={this.CreateNotes}>
-          <div className="main-create-notes-preview d-flex justify-content-md-center align-items-center">
+          <div className="editnote-preview d-flex justify-content-md-center align-items-center">
             <input
-              id="main-create-notes-title"
+              id="editnote-title"
               name="title"
-              className="main-create-notes-title"
+              className="editnote-title"
               type="text"
               placeholder="Untitled"
               required
@@ -80,16 +80,16 @@ class EditNote extends Component {
               onChange={this.OnChangeInput}
             ></input>
             <textarea
-              id="main-create-notes-content"
+              id="editnote-content"
               name="content"
-              className="main-create-notes-body"
+              className="editnote-content"
               placeholder="Type your notes here"
-              rows="27"
+              rows="25"
               required
               value={this.state.content}
               onChange={this.OnChangeInput}
             ></textarea>
-            <button type="submit" className="btn btn-primary">
+            <button type="submit" className="btn btn-primary mt-2">
               Save
             </button>
           </div>

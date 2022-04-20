@@ -15,8 +15,13 @@ class Sidebar extends Component {
   render() {
     return (
       <div className="sidebar-preview">
-        <div className="sidebar-top">
+        {/* <div className="sidebar-top">
           <div className="sidebar-username">username</div>
+        </div> */}
+
+        <div className="sidebar-header">
+          <div className="sidebar-user-icon">{this.props.username[0]}</div>
+          <div className="sidebar-username">{this.props.username}</div>
         </div>
 
         <div className="sidebar-titles">
@@ -28,6 +33,10 @@ class Sidebar extends Component {
                 className={temp ? "sidebar-title-highlighted" : "sidebar-title"}
                 onClick={() => this.titleClick(note._id)}
               >
+                <img
+                  src={require("../images/notes-icon.png")}
+                  className={"sidebar-title-image"}
+                ></img>
                 {note.title}
               </div>
             );
@@ -35,8 +44,17 @@ class Sidebar extends Component {
 
           {/* <div className="sidebar-title">title 1</div>
           <div className="sidebar-title">title 1</div> */}
-          <div className="sidebar-title" onClick={() => this.props.addNote()}>
-            + Add a page
+          <div
+            className="sidebar-title"
+            style={{ color: "#37352f" }}
+            onClick={() => this.props.addNote()}
+          >
+            <img
+              src={require("../images/plus-icon.png")}
+              className={"sidebar-title-plus-image"}
+              width={20}
+            ></img>
+            Add a page
           </div>
         </div>
       </div>
@@ -45,4 +63,3 @@ class Sidebar extends Component {
 }
 
 export default Sidebar;
-

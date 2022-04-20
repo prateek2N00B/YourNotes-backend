@@ -61,7 +61,7 @@ const loginUser = async (req, res) => {
       expiresIn: "1d",
     });
 
-    res.json({ token });
+    res.json({ token: token, username: user[0].username });
   } catch (err) {
     return res.status(500).json({ msg: "this is called" });
   }
@@ -70,15 +70,15 @@ const loginUser = async (req, res) => {
 const verifiedToken = (req, res) => {
   try {
     const token = req.header("Authorization");
-    if (!token) return res.send(false);
+    if (!token) return res.json({ msg: false, username: "" });
 
     jwt.verify(token, process.env.TOKEN_SECRET, async (err, verified) => {
-      if (err) return res.send(false);
+      if (err) return res.json({ msg: false, username: "" });
 
       const user = await Users.findById(verified.id);
-      if (!user) return res.send(false);
+      if (!user) return res.json({ msg: false, username: "" });
 
-      return res.send(true);
+      return res.json({ msg: true, username: user.username });
     });
   } catch (err) {
     return res.status(500).json({ msg: err.message });

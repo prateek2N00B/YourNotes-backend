@@ -9,7 +9,7 @@ class Nav extends Component {
 
   logOutSubmit = () => {
     localStorage.clear();
-    this.props.setIsLogin(false);
+    this.props.setLoginDetails(false, "");
   };
 
   render() {

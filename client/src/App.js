@@ -8,26 +8,26 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      username: "",
       isLogin: false,
     };
   }
 
-  setIsLogin = (val) => {
-    this.setState({ ...this.state, isLogin: val });
+  setLoginDetails = (val, usr) => {
+    this.setState({ ...this.state, isLogin: val, username: usr });
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     const checkLogin = async () => {
       const token = localStorage.getItem("tokenStore");
       if (token) {
-        const verified = await axios.get("/users-api/verify", {
+        const res = await axios.get("/users-api/verify", {
           headers: { Authorization: token },
         });
-        console.log(verified);
-        this.setIsLogin(verified.data);
-        if (verified.data === false) return localStorage.clear();
+        this.setLoginDetails(res.data.msg, res.data.username);
+        if (res.data.msg === false) return localStorage.clear();
       } else {
-        this.setIsLogin(false);
+        this.setLoginDetails(false, "");
       }
     };
     checkLogin();
@@ -37,9 +37,12 @@ class App extends Component {
     return (
       <div>
         {this.state.isLogin ? (
-          <MainPage setIsLogin={this.setIsLogin} />
+          <MainPage
+            setLoginDetails={this.setLoginDetails}
+            username={this.state.username}
+          />
         ) : (
-          <Login setIsLogin={this.setIsLogin} />
+          <Login setLoginDetails={this.setLoginDetails} />
         )}
       </div>
     );
