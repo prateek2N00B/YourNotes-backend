@@ -15,10 +15,6 @@ class Sidebar extends Component {
   render() {
     return (
       <div className="sidebar-preview">
-        {/* <div className="sidebar-top">
-          <div className="sidebar-username">username</div>
-        </div> */}
-
         <div className="sidebar-header">
           <div className="sidebar-user-icon">{this.props.username[0]}</div>
           <div className="sidebar-username">{this.props.username}</div>

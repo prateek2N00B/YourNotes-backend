@@ -15,24 +15,6 @@ class NotesPage extends Component {
     this.state = { path: "", notes: [], activeNoteId: "" };
   }
 
-  // componentDidMount() {
-  //   //need to check id url /create than only perform below code else note
-
-  //   console.log("MainNotes - didMount");
-  //   const token = localStorage.getItem("tokenStore");
-  //   const firstStartUp = async (token) => {
-  //     const res = await axios.get("/notes-api", {
-  //       headers: { Authorization: token },
-  //     });
-  //     if (res.data.length > 0) {
-  //       this.setState({ ...this.state, id: res.data[0]._id });
-  //       let path = this.props.match.url + "/" + this.state.id;
-  //       this.props.history.push(path);
-  //     }
-  //   };
-  //   firstStartUp(token);
-  // }
-
   getNotes = async (token) => {
     const res = await axios.get("/notes-api", {
       headers: { Authorization: token },
@@ -75,6 +57,7 @@ class NotesPage extends Component {
           title: "Untitled",
           content: "",
           date: date,
+          childPages: [],
         };
 
         let res = await axios.post("/notes-api", newNote, {
@@ -104,7 +87,17 @@ class NotesPage extends Component {
             username={this.props.username}
           />
           <section>
-            <Route path={`${path}/:id`} component={EditNote} exact />
+            <Route
+              path={`${path}/:id`}
+              component={(props) => (
+                <EditNote
+                  {...props}
+                  notes={this.state.notes}
+                  changeRoute={this.changeRoute}
+                />
+              )}
+              exact
+            />
           </section>
         </div>
       </Switch>

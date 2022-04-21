@@ -18,6 +18,11 @@ const auth = (req, res, next) => {
   }
 };
 
+const childPagesSchema = mongoose.Schema({
+  id: String,
+  title: String,
+});
+
 const notesSchema = new mongoose.Schema(
   {
     title: {
@@ -40,6 +45,11 @@ const notesSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    childPages: {
+      type: [childPagesSchema],
+      default: undefined,
+      required: true,
+    },
   },
   { timestamps: true }
 );
@@ -57,13 +67,14 @@ const getNotes = async (req, res) => {
 
 const createNotes = async (req, res) => {
   try {
-    const { title, content, date } = req.body;
+    const { title, content, date, childPages } = req.body;
     const newNote = new Notes({
       title: title,
       content: content,
       date: date,
       user_id: req.user.id,
       name: req.user.name,
+      childPages: childPages,
     });
 
     await newNote.save();
@@ -84,13 +95,14 @@ const deleteNotes = async (req, res) => {
 
 const updateNote = async (req, res) => {
   try {
-    const { title, content, date } = req.body;
+    const { title, content, date, childPages } = req.body;
     await Notes.findOneAndUpdate(
       { _id: req.params.id },
       {
         title: title,
         content: content,
         date: date,
+        childPages: childPages,
       }
     );
     res.json({ msg: "Notes Updated" });
@@ -117,5 +129,3 @@ router
   .delete(auth, deleteNotes);
 
 module.exports = router;
-
-
