@@ -116,7 +116,8 @@ const getNote = async (req, res) => {
     const note = await Notes.findById(req.params.id);
     res.json(note);
   } catch (err) {
-    return res.status(500).json({ msg: err.message });
+    // return res.status(500).json({ msg: err.message });
+    return res.json("Note does not exists");
   }
 };
 

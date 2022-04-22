@@ -91,7 +91,7 @@ class EditNote extends Component {
             <div className="editnote-header">
               <div className="editnote-dropdown-parent">
                 <img
-                  src={require("../images/plus-icon.png")}
+                  src={require("../images/square-plus-icon.png")}
                   className={"sidebar-title-plus-image"}
                   width={20}
                   onClick={this.dropdownClicked}

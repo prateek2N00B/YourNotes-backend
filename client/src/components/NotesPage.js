@@ -12,7 +12,12 @@ import EditNote from "./EditNote";
 class NotesPage extends Component {
   constructor(props) {
     super(props);
-    this.state = { path: "", notes: [], activeNoteId: "" };
+    this.state = {
+      path: "",
+      notes: [],
+      activeNoteId: "",
+      sharedNotesIds: [],
+    };
   }
 
   getNotes = async (token) => {
@@ -22,10 +27,18 @@ class NotesPage extends Component {
     this.setState({ ...this.state, notes: res.data });
   };
 
+  getSharedNotesIds = async (token) => {
+    const res = await axios.get("/shared-notes-api", {
+      headers: { Authorization: token },
+    });
+    this.setState({ sharedNotesIds: res.data });
+  };
+
   async componentDidMount() {
     const token = localStorage.getItem("tokenStore");
     if (token) {
       await this.getNotes(token);
+      await this.getSharedNotesIds(token);
     }
 
     if (this.props.location.pathname === "/edit") {
@@ -74,6 +87,28 @@ class NotesPage extends Component {
     }
   };
 
+  addSharedNote = async (url) => {
+    let temp = url.split("/");
+    let sharenote_id = temp[temp.length - 1];
+    const token = localStorage.getItem("tokenStore");
+    if (token) {
+      const res = await axios.get(`/notes-api/${sharenote_id}`, {
+        headers: { Authorization: token },
+      });
+      if (res.data != null && res.data !== "Note does not exists") {
+        const { _id, title } = res.data;
+        const newShareNotes = {
+          note_id: _id,
+          title: title,
+        };
+        await axios.post("/shared-notes-api/", newShareNotes, {
+          headers: { Authorization: token },
+        });
+        await this.getSharedNotesIds(token);
+      }
+    }
+  };
+
   render() {
     let path = this.props.match.url;
     return (
@@ -85,6 +120,8 @@ class NotesPage extends Component {
             id={this.state.activeNoteId}
             notes={this.state.notes}
             username={this.props.username}
+            sharedNotesIds={this.state.sharedNotesIds}
+            addSharedNote={this.addSharedNote}
           />
           <section>
             <Route

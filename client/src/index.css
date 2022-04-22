@@ -243,6 +243,17 @@ code {
   margin-right: 5px;
 }
 
+.sidebar-sharednotes-titles {
+  margin-top: 70px;
+  width: 100%;
+}
+
+.sidebar-sharenotes-input {
+  padding: 0px 10px 0px;
+  margin-bottom: 5px;
+  margin-top: 8px;
+}
+
 /* editnote */
 .editnote {
   width: 100%;
