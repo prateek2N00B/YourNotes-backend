@@ -16,7 +16,8 @@ class NotesPage extends Component {
       path: "",
       notes: [],
       activeNoteId: "",
-      // sharedNotesIds: [],
+      sharedNotesIds: [],
+      sharedNotes: [],
     };
   }
 
@@ -30,18 +31,42 @@ class NotesPage extends Component {
     }
   };
 
-  // getSharedNotesIds = async (token) => {
-  //   const res = await axios.get("/shared-notes-api", {
-  //     headers: { Authorization: token },
-  //   });
-  //   this.setState({ sharedNotesIds: res.data });
-  // };
+  getSharedNotesIds = async () => {
+    const token = localStorage.getItem("tokenStore");
+    if (token) {
+      const res = await axios.get("/shared-notes-api", {
+        headers: { Authorization: token },
+      });
+      this.setState({ sharedNotesIds: res.data });
+    }
+  };
+
+  getSharedNoteTitleFromIds = async (ids) => {
+    const token = localStorage.getItem("tokenStore");
+    if (token) {
+      const newIds = {
+        notes_id: ids,
+      };
+      const res = await axios.post("/notes-api/get-title", newIds, {
+        headers: { Authorization: token },
+      });
+      // return res.data;
+      console.log(res.data);
+      this.setState({ sharedNotes: res.data });
+    }
+  };
+
+  getSharedNotes = async () => {
+    await this.getSharedNotesIds();
+    await this.getSharedNoteTitleFromIds(this.state.sharedNotesIds);
+  };
 
   async componentDidMount() {
     // const token = localStorage.getItem("tokenStore");
     // if (token) {
     await this.getNotes();
-    // await this.getSharedNotesIds(token);
+    await this.getSharedNotes();
+    console.log(this.state);
     // }
 
     if (this.props.location.pathname === "/edit") {
@@ -105,27 +130,26 @@ class NotesPage extends Component {
     }
   };
 
-  // addSharedNote = async (url) => {
-  //   let temp = url.split("/");
-  //   let sharenote_id = temp[temp.length - 1];
-  //   const token = localStorage.getItem("tokenStore");
-  //   if (token) {
-  //     const res = await axios.get(`/notes-api/${sharenote_id}`, {
-  //       headers: { Authorization: token },
-  //     });
-  //     if (res.data != null && res.data !== "Note does not exists") {
-  //       const { _id, title } = res.data;
-  //       const newShareNotes = {
-  //         note_id: _id,
-  //         title: title,
-  //       };
-  //       await axios.post("/shared-notes-api/", newShareNotes, {
-  //         headers: { Authorization: token },
-  //       });
-  //       await this.getSharedNotesIds(token);
-  //     }
-  //   }
-  // };
+  addSharedNote = async (url) => {
+    let temp = url.split("/");
+    let sharenote_id = temp[temp.length - 1];
+    const token = localStorage.getItem("tokenStore");
+    if (token) {
+      const res = await axios.get(`/notes-api/${sharenote_id}`, {
+        headers: { Authorization: token },
+      });
+      if (res.data != null && res.data !== "Note does not exists") {
+        const { _id } = res.data;
+        const newShareNotes = {
+          note_id: _id,
+        };
+        await axios.post("/shared-notes-api/", newShareNotes, {
+          headers: { Authorization: token },
+        });
+        await this.getSharedNotes();
+      }
+    }
+  };
 
   render() {
     let path = this.props.match.url;
@@ -138,8 +162,8 @@ class NotesPage extends Component {
             id={this.state.activeNoteId}
             notes={this.state.notes}
             username={this.props.username}
-            // sharedNotesIds={this.state.sharedNotesIds}
-            // addSharedNote={this.addSharedNote}
+            sharedNotes={this.state.sharedNotes}
+            addSharedNote={this.addSharedNote}
           />
           <section>
             <Route

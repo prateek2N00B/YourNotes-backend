@@ -139,8 +139,6 @@ const getTitle = async (req, res) => {
       const note = await Notes.findById(i);
       if (note) {
         ans.push({ note_id: note._id, title: note.title });
-      } else {
-        ans.push("No title");
       }
     }
     res.json(ans);

@@ -6,7 +6,7 @@ import { format } from "timeago.js";
 class Home extends Component {
   constructor(props) {
     super(props);
-    this.state = { token: "", notes: [] };
+    this.state = { token: "", notes: [], sharedNotesIds: [], sharedNotes: [] };
   }
 
   getNotes = async (token) => {
@@ -16,11 +16,34 @@ class Home extends Component {
     this.setState({ ...this.state, notes: res.data });
   };
 
-  componentDidMount() {
+  getSharedNotesIds = async (token) => {
+    const res = await axios.get("/shared-notes-api", {
+      headers: { Authorization: token },
+    });
+    this.setState({ sharedNotesIds: res.data });
+  };
+
+  getSharedNotes = async (token) => {
+    await this.getSharedNotesIds(token);
+    let temp = [];
+    for (const id of this.state.sharedNotesIds) {
+      const res = await axios.get(`/notes-api/${id}`, {
+        headers: { Authorization: token },
+      });
+      if (res.data !== null) {
+        temp.push(res.data);
+      }
+    }
+    this.setState({ sharedNotes: temp });
+    console.log(this.state.sharedNotes);
+  };
+
+  async componentDidMount() {
     const token = localStorage.getItem("tokenStore");
     this.setState({ ...this.state, token: token });
     if (token) {
       this.getNotes(token);
+      this.getSharedNotes(token);
     }
   }
 
@@ -64,6 +87,30 @@ class Home extends Component {
               </div>
             );
           }
+        })}
+
+        {this.state.sharedNotes.map((note) => {
+          return (
+            <div className="card" key={note._id}>
+              <div className="card-title">
+                <h5>{note.title}</h5>
+              </div>
+              <div className="card-text">
+                <p>{note.content}</p>
+              </div>
+              <p className="card-date">last edited {format(note.date)}</p>
+              <div className="card-footer">
+                {note.name}
+                <Link to={`edit/${note._id}`}>Edit</Link>
+              </div>
+              {/* <button
+                className="card-delete"
+                onClick={() => this.deleteNote(note._id)}
+              >
+                X
+              </button> */}
+            </div>
+          );
         })}
       </div>
     );

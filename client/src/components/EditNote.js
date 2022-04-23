@@ -55,19 +55,19 @@ class EditNote extends Component {
 
   getNoteInfo = async () => {
     await this.getNote();
-    console.log(this.state);
+    // console.log(this.state);
     let res = await this.getNoteTitleFromIds(this.state.childPagesIds);
-    console.log(res);
+    // console.log(res);
     this.setState({ ...this.state, childPages: res });
     res = await this.getNoteTitleFromIds(this.state.parentPagesIds);
     this.setState({ ...this.state, parentPages: res });
-    console.log(this.state);
+    // console.log(this.state);
   };
 
   componentDidMount() {
-    console.log("EditNote - componentDidMounnt");
+    // console.log("EditNote - componentDidMounnt");
     this.getNoteInfo();
-    console.log(this.state);
+    // console.log(this.state);
     autosize(this.textarea);
   }
 

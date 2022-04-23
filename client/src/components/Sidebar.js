@@ -59,14 +59,14 @@ class Sidebar extends Component {
         </div>
 
         {/* shared notes part */}
-        {/* <div className="sidebar-sharednotes-titles">
-          {this.props.sharedNotesIds.map((note) => {
+        <div className="sidebar-sharednotes-titles">
+          {this.props.sharedNotes.map((note) => {
             let temp = this.props.id === note.note_id;
             return (
               <div
                 key={note.note_id}
                 className={temp ? "sidebar-title-highlighted" : "sidebar-title"}
-                onClick={() => this.prop(note.note_id)}
+                onClick={() => this.props.changeRootNote(note.note_id)}
               >
                 <img
                   src={require("../images/notes-icon.png")}
@@ -99,9 +99,9 @@ class Sidebar extends Component {
               className={"sidebar-title-plus-image"}
               width={20}
             ></img>
-            Add a share page
+            Add shared page
           </div>
-        </div> */}
+        </div>
       </div>
     );
   }
