@@ -18,11 +18,6 @@ const auth = (req, res, next) => {
   }
 };
 
-const childPagesSchema = mongoose.Schema({
-  id: String,
-  title: String,
-});
-
 const notesSchema = new mongoose.Schema(
   {
     title: {
@@ -46,8 +41,13 @@ const notesSchema = new mongoose.Schema(
       required: true,
     },
     childPages: {
-      type: [childPagesSchema],
-      default: undefined,
+      type: [String],
+      default: [],
+      required: true,
+    },
+    parentPages: {
+      type: [String],
+      default: [],
       required: true,
     },
   },
@@ -67,7 +67,7 @@ const getNotes = async (req, res) => {
 
 const createNotes = async (req, res) => {
   try {
-    const { title, content, date, childPages } = req.body;
+    const { title, content, date, childPages, parentPages } = req.body;
     const newNote = new Notes({
       title: title,
       content: content,
@@ -75,6 +75,7 @@ const createNotes = async (req, res) => {
       user_id: req.user.id,
       name: req.user.name,
       childPages: childPages,
+      parentPages: parentPages,
     });
 
     await newNote.save();
@@ -86,7 +87,15 @@ const createNotes = async (req, res) => {
 
 const deleteNotes = async (req, res) => {
   try {
-    await Notes.findByIdAndDelete(req.params.id);
+    const deleteRec = async (id) => {
+      const note = await Notes.findById(id);
+      for (const i of note.childPages) {
+        await deleteRec(i);
+      }
+      await Notes.findByIdAndDelete(id);
+    };
+    await deleteRec(req.params.id);
+    // await Notes.findByIdAndDelete(req.params.id);
     res.json({ msg: "Deleted the Note" });
   } catch (err) {
     return res.status(500).json({ msg: err.message });
@@ -95,7 +104,7 @@ const deleteNotes = async (req, res) => {
 
 const updateNote = async (req, res) => {
   try {
-    const { title, content, date, childPages } = req.body;
+    const { title, content, date, childPages, parentPages } = req.body;
     await Notes.findOneAndUpdate(
       { _id: req.params.id },
       {
@@ -103,6 +112,7 @@ const updateNote = async (req, res) => {
         content: content,
         date: date,
         childPages: childPages,
+        parentPages: parentPages,
       }
     );
     res.json({ msg: "Notes Updated" });
@@ -121,7 +131,26 @@ const getNote = async (req, res) => {
   }
 };
 
+const getTitle = async (req, res) => {
+  try {
+    let ans = [];
+    // console.log(req.body);
+    for (const i of req.body.notes_id) {
+      const note = await Notes.findById(i);
+      if (note) {
+        ans.push({ note_id: note._id, title: note.title });
+      } else {
+        ans.push("No title");
+      }
+    }
+    res.json(ans);
+  } catch (err) {
+    return res.json("Note does not exists");
+  }
+};
+
 router.route("/").get(auth, getNotes).post(auth, createNotes);
+router.route("/get-title").post(auth, getTitle);
 
 router
   .route("/:id")

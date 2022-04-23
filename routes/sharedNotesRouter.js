@@ -29,7 +29,7 @@ const sharedNotesSchema = new mongoose.Schema(
       required: true,
     },
     othersNotes: {
-      type: [{ note_id: String, title: String }],
+      type: [String],
       required: true,
       default: [],
     },
@@ -46,12 +46,12 @@ const addToShareNotes = async (req, res) => {
       const newShareNotes = new sharedNotes({
         name: req.user.name,
         user_id: req.user.id,
-        othersNotes: [{ note_id: req.body.note_id, title: req.body.title }],
+        othersNotes: [req.body.note_id],
       });
       await newShareNotes.save();
     } else {
       var { name, user_id, othersNotes } = userShareNotes[0];
-      othersNotes.push({ note_id: req.body.note_id, title: req.body.title });
+      othersNotes.push(req.body.note_id);
       await sharedNotes.findOneAndUpdate(
         { user_id: user_id },
         {

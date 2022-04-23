@@ -32,13 +32,15 @@ code {
 
 .notes-page {
   width: 100%;
-  min-height: 100vh;
+  /* min-height: 100vh; */
+  min-height: 100%;
   color: whitesmoke;
 }
 
 .notes-page section {
   width: 100%;
-  min-height: 100vh;
+  /* min-height: 100vh; */
+  min-height: 100%;
   /* box-shadow: 0 0 5px rgb(7, 25, 63); */
   /* padding: 20px 0; */
 }
@@ -158,7 +160,8 @@ code {
 .sidebar-preview {
   width: 20%;
   max-width: 250px;
-  height: 100vh;
+  /* height: 100vh; */
+  min-height: 100%;
   flex-direction: column;
   background-color: #f7f6f3;
 }
@@ -260,6 +263,12 @@ code {
   height: 100%;
 }
 
+.editnote-scrollable {
+  max-height: calc(100vh - 119px);
+  overflow-y: auto;
+  overflow-y: scroll;
+}
+
 .editnote h2 {
   color: black;
   margin: 20px;
@@ -268,7 +277,7 @@ code {
 .editnote .editnote-preview {
   display: flex;
   flex-direction: column;
-  padding: 2em 3em;
+  padding: 10px 48px 32px 48px;
   flex-grow: 1;
   width: 100%;
 }
@@ -290,6 +299,8 @@ code {
   width: 100%;
   height: 100%;
   padding-left: 100px;
+  align-items: center;
+  display: flex;
 }
 
 .editnote-content:focus {
@@ -297,7 +308,15 @@ code {
 }
 
 .editnote-dropdown-parent {
+  margin-top: 8px;
   display: inline;
+}
+
+.editnote-dropdown-plus-icon {
+  height: 18px;
+  width: 18px;
+  margin-bottom: 5px;
+  margin-right: 5px;
 }
 
 .editnote-dropdown-content {
@@ -326,12 +345,12 @@ code {
   width: 323.993px;
   z-index: 10;
 }
-.editnote-dropdown-content p {
+/* .editnote-dropdown-content p {
   color: #37352f;
   margin: 5px 10px 10px 20px;
-}
+} */
 
-.editnote-dropdown-title {
+/* .editnote-dropdown-title {
   color: #37352f;
   padding: 2px 10px 2px 20px;
   display: flex;
@@ -347,6 +366,46 @@ code {
   height: 18px;
   padding-top: 2px;
   margin-right: 10px;
+} */
+
+.editnote-dropdown-content a {
+  align-items: center;
+  display: flex;
+  cursor: pointer;
+  padding: 6px;
+}
+
+.editnote-dropdown-content a:hover {
+  background-color: rgba(55, 53, 47, 0.08);
+}
+
+.editnote-dropdown-icon {
+  height: 50;
+  width: 50;
+  border-radius: 3px;
+  box-shadow: rgb(15 15 15 / 10%) 0px 0px 0px 1px;
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+.editnote-dropdown-text {
+  display: block;
+  margin-left: 12px;
+}
+
+.editnote-dropdown-head {
+  color: #37352f;
+  font-size: 15px;
+  padding: 0px;
+  margin: 0px;
+}
+
+.editnote-dropdown-subhead {
+  color: rgba(55, 53, 47, 0.6);
+  font-size: 13px;
+  padding: 0px;
+  margin: 0px;
+  margin-top: 1px;
 }
 
 .editnote-content-parent {
@@ -359,8 +418,8 @@ code {
   background-color: #fafafa;
   border-radius: 8px;
   padding: 10px 10px 10px 10px;
-  overflow-y: scroll;
-  height: 690px;
+  /* overflow-y: scroll; */
+  /* max-height: 700px; */
 }
 .editnote-content-pagelink {
   color: #37352f;
@@ -391,6 +450,34 @@ code {
   padding: 2em;
   border-radius: 8px;
   font-size: 16px;
-  font: san-serif;
-  font-weight: 400;
+  font: "SF Pro Text";
+  font-weight: 470;
+}
+
+.editnote-topbar {
+  width: 100%;
+  height: 45px;
+  display: flex;
+  flex-direction: row;
+  padding: 12px 20px 12px 20px;
+  align-items: center;
+}
+
+.editnote-topbar span {
+  color: #37352f;
+  margin: 0px 5px 0px 5px;
+}
+
+.editnote-clickable {
+  color: #37352f;
+  padding: 0px 4px 0px 4px;
+  align-items: center;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 470;
+}
+
+.editnote-clickable:hover {
+  background-color: rgba(55, 53, 47, 0.08);
 }

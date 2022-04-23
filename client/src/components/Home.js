@@ -40,33 +40,34 @@ class Home extends Component {
   render() {
     return (
       <div className="note-wrapper">
-        {this.state.notes.map((note) => (
-          <div className="card" key={note._id}>
-            <div className="card-title">
-              <h5>{note.title}</h5>
-            </div>
-            <div className="card-text">
-              <p>{note.content}</p>
-            </div>
-            <p className="card-date">last edited {format(note.date)}</p>
-            <div className="card-footer">
-              {note.name}
-              <Link to={`edit/${note._id}`}>Edit</Link>
-            </div>
-            <button
-              className="card-delete"
-              onClick={() => this.deleteNote(note._id)}
-            >
-              X
-            </button>
-          </div>
-        ))}
+        {this.state.notes.map((note) => {
+          if (note.parentPages.length == 0) {
+            return (
+              <div className="card" key={note._id}>
+                <div className="card-title">
+                  <h5>{note.title}</h5>
+                </div>
+                <div className="card-text">
+                  <p>{note.content}</p>
+                </div>
+                <p className="card-date">last edited {format(note.date)}</p>
+                <div className="card-footer">
+                  {note.name}
+                  <Link to={`edit/${note._id}`}>Edit</Link>
+                </div>
+                <button
+                  className="card-delete"
+                  onClick={() => this.deleteNote(note._id)}
+                >
+                  X
+                </button>
+              </div>
+            );
+          }
+        })}
       </div>
     );
   }
 }
 
 export default Home;
-
-
-

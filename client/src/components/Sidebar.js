@@ -9,10 +9,6 @@ class Sidebar extends Component {
 
   componentDidMount() {}
 
-  titleClick = (id) => {
-    this.props.changeRoute(id);
-  };
-
   onChangeInput = (e) => {
     const { name, value } = e.target;
     this.setState({ ...this.state, [name]: value });
@@ -27,20 +23,24 @@ class Sidebar extends Component {
         </div>
         <div className="sidebar-titles">
           {this.props.notes.map((note) => {
-            let temp = this.props.id === note._id;
-            return (
-              <div
-                key={note._id}
-                className={temp ? "sidebar-title-highlighted" : "sidebar-title"}
-                onClick={() => this.titleClick(note._id)}
-              >
-                <img
-                  src={require("../images/notes-icon.png")}
-                  className={"sidebar-title-image"}
-                ></img>
-                {note.title}
-              </div>
-            );
+            if (note.parentPages.length == 0) {
+              let temp = this.props.id === note._id;
+              return (
+                <div
+                  key={note._id}
+                  className={
+                    temp ? "sidebar-title-highlighted" : "sidebar-title"
+                  }
+                  onClick={() => this.props.changeRootNote(note._id)}
+                >
+                  <img
+                    src={require("../images/notes-icon.png")}
+                    className={"sidebar-title-image"}
+                  ></img>
+                  {note.title}
+                </div>
+              );
+            }
           })}
 
           {/* Add page part */}
@@ -59,14 +59,14 @@ class Sidebar extends Component {
         </div>
 
         {/* shared notes part */}
-        <div className="sidebar-sharednotes-titles">
+        {/* <div className="sidebar-sharednotes-titles">
           {this.props.sharedNotesIds.map((note) => {
             let temp = this.props.id === note.note_id;
             return (
               <div
                 key={note.note_id}
                 className={temp ? "sidebar-title-highlighted" : "sidebar-title"}
-                onClick={() => this.titleClick(note.note_id)}
+                onClick={() => this.prop(note.note_id)}
               >
                 <img
                   src={require("../images/notes-icon.png")}
@@ -101,7 +101,7 @@ class Sidebar extends Component {
             ></img>
             Add a share page
           </div>
-        </div>
+        </div> */}
       </div>
     );
   }

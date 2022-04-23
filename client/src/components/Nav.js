@@ -23,19 +23,19 @@ class Nav extends Component {
             className="collapse navbar-collapse flex-row-reverse"
             id="navbarNav"
           >
-            <ul className="navbar-nav">
-              <li className="nav-item active">
+            <ul className="navbar-nav mx-5">
+              <li className="nav-item active mx-2">
                 <Link className="nav-link" to="/">
                   Home
                 </Link>
               </li>
 
-              <li className="nav-item">
+              <li className="nav-item mx-2">
                 <Link className="nav-link" to="/edit">
                   Notes
                 </Link>
               </li>
-              <li onClick={this.logOutSubmit} className="nav-item">
+              <li onClick={this.logOutSubmit} className="nav-item mx-2">
                 <Link className="nav-link" to="/">
                   Logout
                 </Link>
