@@ -66,8 +66,8 @@ code {
 }
 .card .card-delete {
   position: absolute;
-  top: 0;
-  right: 10px;
+  top: 5px;
+  right: 15px;
   font-weight: 900;
   cursor: pointer;
   background: transparent;
@@ -91,6 +91,7 @@ code {
   overflow: hidden;
   margin: 10px 0;
   color: #fff9;
+  padding: 0px 5px 0px;
 }
 .card .card-date {
   text-align: right;
@@ -102,9 +103,9 @@ code {
   align-items: center;
   width: 100%;
   height: 40px;
-  text-transform: uppercase;
+  /* text-transform: uppercase; */
   letter-spacing: 2px;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .login-page span:hover {
@@ -154,6 +155,14 @@ code {
 
 .main-notes {
   flex-direction: row;
+}
+
+.navbar-logo {
+  width: 40px;
+  height: 40px;
+  margin-right: 20px;
+  /* margin-bottom: 5px; */
+  border-radius: 5px;
 }
 
 /* Sidebar  */

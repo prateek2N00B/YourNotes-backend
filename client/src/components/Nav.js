@@ -16,8 +16,12 @@ class Nav extends Component {
     return (
       <header>
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark p-3">
-          <div className="mx-5">
-            <h3>Navbar</h3>
+          <div className="mx-5 d-flex flex-row">
+            <img
+              src={require("../images/Your-notes-logo.jpg")}
+              className="navbar-logo"
+            ></img>
+            <h3>YourNotes</h3>
           </div>
           <div
             className="collapse navbar-collapse flex-row-reverse"
