@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
+const { route } = require("express/lib/application");
 
 const auth = (req, res, next) => {
   try {
@@ -18,15 +19,33 @@ const auth = (req, res, next) => {
   }
 };
 
+const blockSchema = new mongoose.Schema({
+  id: {
+    type: String,
+    required: true,
+  },
+  tag: {
+    type: String,
+    required: true,
+    default: "p",
+  },
+  html: {
+    type: String,
+    require: true,
+    default: "",
+  },
+});
+
 const notesSchema = new mongoose.Schema(
   {
     title: {
       type: String,
       required: true,
     },
-    content: {
-      type: String,
-      required: false,
+    blocks: {
+      type: [blockSchema],
+      required: true,
+      default: [],
     },
     date: {
       type: Date,
@@ -67,10 +86,10 @@ const getNotes = async (req, res) => {
 
 const createNotes = async (req, res) => {
   try {
-    const { title, content, date, childPages, parentPages } = req.body;
+    const { title, blocks, date, childPages, parentPages } = req.body;
     const newNote = new Notes({
       title: title,
-      content: content,
+      blocks: blocks,
       date: date,
       user_id: req.user.id,
       name: req.user.name,
@@ -104,12 +123,12 @@ const deleteNotes = async (req, res) => {
 
 const updateNote = async (req, res) => {
   try {
-    const { title, content, date, childPages, parentPages } = req.body;
+    const { title, blocks, date, childPages, parentPages } = req.body;
     await Notes.findOneAndUpdate(
       { _id: req.params.id },
       {
         title: title,
-        content: content,
+        blocks: blocks,
         date: date,
         childPages: childPages,
         parentPages: parentPages,
@@ -147,8 +166,31 @@ const getTitle = async (req, res) => {
   }
 };
 
+const deleteChildPage = async (req, res) => {
+  try {
+    const note = await Notes.findById(req.params.id);
+    console.log(note);
+    if (!note) return res.json("Parent Note does not exists");
+
+    let childPages = note.childPages;
+    childPages = childPages.filter((item) => item !== req.body.childPage_id);
+
+    await Notes.findOneAndUpdate(
+      { _id: note._id },
+      {
+        childPages: childPages,
+      }
+    );
+
+    res.json("ChildPage deleted");
+  } catch (err) {
+    return res.status(500).json({ msg: err.message });
+  }
+};
+
 router.route("/").get(auth, getNotes).post(auth, createNotes);
 router.route("/get-title").post(auth, getTitle);
+router.route("/:id/delete-childpage").post(auth, deleteChildPage);
 
 router
   .route("/:id")

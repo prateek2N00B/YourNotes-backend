@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 const auth = (req, res, next) => {
   try {
     const token = req.header("Authorization");
+    console.log(token);
     if (!token) return res.status(400).json({ msg: "Invalid Authentication" });
 
     jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
@@ -75,11 +76,33 @@ const getSharedNotes = async (req, res) => {
     } else {
       res.json(userShareNotes[0].othersNotes);
     }
-  } catch {
-    return err.status(500).json({ msg: err.message });
+  } catch (err) {
+    return res.status(500).json({ msg: err.message });
+  }
+};
+
+const deleteSharedNote = async (req, res) => {
+  try {
+    const userShareNotes = await sharedNotes.find({ user_id: req.user.id });
+    if (userShareNotes.length !== 0) {
+      let othersNotes = userShareNotes[0].othersNotes;
+      othersNotes = othersNotes.filter((item) => item !== req.body.note_id);
+      await sharedNotes.findOneAndUpdate(
+        { user_id: req.user.id },
+        {
+          othersNotes: othersNotes,
+        }
+      );
+
+      res.json("Shared Note delete");
+    }
+  } catch (err) {
+    return res.status(500).json({ msg: err.message });
   }
 };
 
 router.route("/").get(auth, getSharedNotes).post(auth, addToShareNotes);
+
+router.route("/delete").post(auth, deleteSharedNote);
 
 module.exports = router;

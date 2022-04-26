@@ -9,6 +9,10 @@ import axios from "axios";
 import Sidebar from "./Sidebar";
 import EditNote from "./EditNote";
 
+const unique_id = () => {
+  return Date.now().toString(36);
+};
+
 class NotesPage extends Component {
   constructor(props) {
     super(props);
@@ -113,7 +117,7 @@ class NotesPage extends Component {
         const date = new Date().toLocaleString();
         const newNote = {
           title: "Untitled",
-          content: "",
+          blocks: [{ id: unique_id(), tag: "p", content: "" }],
           date: date,
           childPages: [],
           parentPages: parentArray,
@@ -151,6 +155,19 @@ class NotesPage extends Component {
     }
   };
 
+  deleteSharedNote = async (id) => {
+    const token = localStorage.getItem("tokenStore");
+    if (token) {
+      const newShareNotes = {
+        note_id: id,
+      };
+      await axios.post("/shared-notes-api/delete", newShareNotes, {
+        headers: { Authorization: token },
+      });
+      await this.getSharedNotes();
+    }
+  };
+
   render() {
     let path = this.props.match.url;
     return (
@@ -164,6 +181,7 @@ class NotesPage extends Component {
             username={this.props.username}
             sharedNotes={this.state.sharedNotes}
             addSharedNote={this.addSharedNote}
+            deleteSharedNote={this.deleteSharedNote}
           />
           <section>
             <Route

@@ -65,14 +65,29 @@ class Sidebar extends Component {
             return (
               <div
                 key={note.note_id}
-                className={temp ? "sidebar-title-highlighted" : "sidebar-title"}
-                onClick={() => this.props.changeRootNote(note.note_id)}
+                className={
+                  temp
+                    ? "sidebar-sharednotes-title-highlighted"
+                    : "sidebar-sharednotes-title"
+                }
               >
-                <img
-                  src={require("../images/notes-icon.png")}
-                  className={"sidebar-title-image"}
-                ></img>
-                {note.title}
+                <div onClick={() => this.props.changeRootNote(note.note_id)}>
+                  <img
+                    src={require("../images/notes-icon.png")}
+                    className={"sidebar-title-image"}
+                  ></img>
+                  {note.title}
+                </div>
+
+                <div
+                  className="sidebar-sharednotes-delete"
+                  onClick={() => this.props.deleteSharedNote(note.note_id)}
+                >
+                  <img
+                    src={require("../images/remove-icon.png")}
+                    width={22}
+                  ></img>
+                </div>
               </div>
             );
           })}

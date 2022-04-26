@@ -1,6 +1,12 @@
 import React, { Component } from "react";
 import axios from "axios";
-import autosize from "autosize";
+import autosize, { update } from "autosize";
+
+import EditableBlock from "./EditableBlock";
+
+const unique_id = () => {
+  return Date.now().toString(36);
+};
 
 class EditNote extends Component {
   constructor(props) {
@@ -8,12 +14,14 @@ class EditNote extends Component {
     this.state = {
       id: "",
       title: "",
-      content: "",
+      blocks: [],
       childPagesIds: [],
       parentPagesIds: [],
       childPages: [],
       parentPages: [],
       dropdownVisible: false,
+      temp: [],
+      activeElement: { id: null, ref: null },
     };
   }
 
@@ -33,7 +41,7 @@ class EditNote extends Component {
         ...this.state,
         id: res.data._id,
         title: res.data.title,
-        content: res.data.content,
+        blocks: res.data.blocks,
         childPagesIds: res.data.childPages, // change childPage to childPageIds everywhere
         parentPagesIds: res.data.parentPages,
       });
@@ -78,13 +86,14 @@ class EditNote extends Component {
   }
 
   saveNotes = async () => {
+    console.log(this.state.blocks);
     try {
       const token = localStorage.getItem("tokenStore");
       if (token) {
         const date = new Date().toLocaleString();
         const newNote = {
           title: this.state.title,
-          content: this.state.content,
+          blocks: this.state.blocks,
           date: date,
           childPages: this.state.childPagesIds,
           parentPages: this.state.parentPagesIds,
@@ -108,7 +117,7 @@ class EditNote extends Component {
 
   dropdownClicked = () => {
     let temp = this.state.dropdownVisible;
-    this.setState({ ...this.state, dropdownVisible: !temp });
+    this.setState({ dropdownVisible: !temp });
   };
 
   childPageSelected = (id) => {
@@ -128,8 +137,164 @@ class EditNote extends Component {
     this.dropdownClicked();
   };
 
+  deleteNote = async (id) => {
+    try {
+      const token = localStorage.getItem("tokenStore");
+      if (token) {
+        await axios.delete(`notes-api/${id}`, {
+          headers: { Authorization: token },
+        });
+        this.getNoteInfo();
+      }
+    } catch (err) {
+      console.log(err);
+      window.location.href = "/";
+    }
+  };
+
+  deleteChildPage = async (id) => {
+    try {
+      const token = localStorage.getItem("tokenStore");
+      if (token) {
+        const res = await axios.post(
+          `/notes-api/${this.state.id}/delete-childPage`,
+          { childPage_id: id },
+          { headers: { Authorization: token } }
+        );
+
+        if (res.data === "ChildPage deleted") {
+          this.getNoteInfo();
+        }
+      }
+    } catch (err) {
+      console.log(err);
+      window.location.href = "/";
+    }
+  };
+
+  onChangeHandler = (updatedBlock) => {
+    const blocks = this.state.blocks;
+    const index = blocks.map((b) => b.id).indexOf(updatedBlock.id);
+    const updatedBlocks = [...blocks];
+    updatedBlocks[index] = {
+      ...updatedBlocks[index],
+      tag: updatedBlock.tag,
+      html: updatedBlock.html,
+    };
+    this.setState({ blocks: updatedBlocks });
+  };
+
+  setCursorToEnd = (element) => {
+    const range = document.createRange();
+    const selection = window.getSelection();
+    range.selectNodeContents(element);
+    range.collapse(false);
+    selection.removeAllRanges();
+    selection.addRange(range);
+    element.focus();
+  };
+
+  deleteBlock = (id, ref) => {
+    const previousBlock = ref.previousElementSibling;
+    const index = this.state.blocks.map((b) => b.id).indexOf(id);
+    if (index > 0) {
+      const updatedBlocks = [...this.state.blocks];
+      updatedBlocks.splice(index, 1);
+      this.changeActiveElement(this.state.blocks[index - 1].id, previousBlock);
+      this.setState({ blocks: updatedBlocks }, () => {
+        this.setCursorToEnd(previousBlock);
+        previousBlock.focus();
+      });
+    }
+  };
+
+  addNewHeadingBlock = async () => {
+    if (this.state.activeElement.ref != null) {
+      let newBlock = { id: unique_id(), tag: "h2", html: "" };
+      const blocks = this.state.blocks;
+      const index = blocks
+        .map((b) => b.id)
+        .indexOf(this.state.activeElement.id);
+      if (this.state.activeElement.ref.outerText == "") {
+        const updatedBlocks = [...blocks];
+        updatedBlocks[index].tag = "h2";
+        await this.setState({ blocks: updatedBlocks });
+        this.state.activeElement.ref.focus();
+      } else {
+        const updatedBlocks = [...blocks];
+        updatedBlocks.splice(index + 1, 0, newBlock);
+        await this.setState({ blocks: updatedBlocks }, () => {
+          if (this.state.activeElement.ref.nextElementSibling) {
+            this.state.activeElement.ref.nextElementSibling.focus();
+          }
+        });
+      }
+      this.dropdownClicked();
+      this.forceUpdate();
+    }
+  };
+
+  addNewSubHeadingBlock = async () => {
+    if (this.state.activeElement.ref != null) {
+      let newBlock = { id: unique_id(), tag: "h3", html: "" };
+      const blocks = this.state.blocks;
+      const index = blocks
+        .map((b) => b.id)
+        .indexOf(this.state.activeElement.id);
+      if (this.state.activeElement.ref.outerText == "") {
+        const updatedBlocks = [...blocks];
+        updatedBlocks[index].tag = "h3";
+        await this.setState({ blocks: updatedBlocks });
+        this.state.activeElement.ref.focus();
+      } else {
+        const updatedBlocks = [...blocks];
+        updatedBlocks.splice(index + 1, 0, newBlock);
+        await this.setState({ blocks: updatedBlocks }, () => {
+          if (this.state.activeElement.ref.nextElementSibling) {
+            this.state.activeElement.ref.nextElementSibling.focus();
+          }
+        });
+      }
+      this.dropdownClicked();
+      this.forceUpdate();
+    }
+  };
+
+  addNewTextBlock = async () => {
+    if (this.state.activeElement.ref != null) {
+      let newBlock = { id: unique_id(), tag: "p", html: "" };
+      const blocks = this.state.blocks;
+      const index = blocks
+        .map((b) => b.id)
+        .indexOf(this.state.activeElement.id);
+      if (this.state.activeElement.ref.outerText == "") {
+        const updatedBlocks = [...blocks];
+        updatedBlocks[index].tag = "p";
+        await this.setState({ blocks: updatedBlocks }, () => {
+          this.state.activeElement.ref.focus();
+        });
+      } else {
+        const updatedBlocks = [...blocks];
+        updatedBlocks.splice(index + 1, 0, newBlock);
+        await this.setState({ blocks: updatedBlocks }, () => {
+          if (this.state.activeElement.ref.nextElementSibling) {
+            this.state.activeElement.ref.nextElementSibling.focus();
+          }
+        });
+      }
+      this.dropdownClicked();
+      this.forceUpdate();
+    }
+  };
+
+  changeActiveElement = async (id, ref) => {
+    let temp = { ref: ref, id: id };
+    await this.setState({ activeElement: temp }, () => {
+      console.log(this.state.activeElement.id, this.state.activeElement.ref);
+    });
+  };
+
   render() {
-    // console.log("MainCreateNotes -- render");
     return (
       <div className="editnote">
         <div className="editnote-topbar">
@@ -178,6 +343,36 @@ class EditNote extends Component {
                           </p>
                         </div>
                       </a>
+
+                      <a onClick={() => this.addNewHeadingBlock()}>
+                        <div className="editnote-dropdown-vis">H1</div>
+                        <div className="editnote-dropdown-text">
+                          <p className="editnote-dropdown-head">Heading</p>
+                          <p className="editnote-dropdown-subhead">
+                            Section heading.
+                          </p>
+                        </div>
+                      </a>
+
+                      <a onClick={() => this.addNewSubHeadingBlock()}>
+                        <div className="editnote-dropdown-vis">H2</div>
+                        <div className="editnote-dropdown-text">
+                          <p className="editnote-dropdown-head">Sub Heading</p>
+                          <p className="editnote-dropdown-subhead">
+                            Sub-section heading.
+                          </p>
+                        </div>
+                      </a>
+
+                      <a onClick={() => this.addNewTextBlock()}>
+                        <div className="editnote-dropdown-vis">Aa</div>
+                        <div className="editnote-dropdown-text">
+                          <p className="editnote-dropdown-head">Text</p>
+                          <p className="editnote-dropdown-subhead">
+                            Just plain text.
+                          </p>
+                        </div>
+                      </a>
                     </div>
                   ) : (
                     <></>
@@ -197,23 +392,38 @@ class EditNote extends Component {
 
               <div className="editnote-content-parent">
                 <div className="editnote-content">
-                  {this.state.childPages.map((childNote) => {
-                    return (
-                      <div
-                        className="editnote-content-pagelink"
-                        onClick={() => {
-                          this.props.changeRoute(childNote.note_id);
-                        }}
-                      >
-                        <img
-                          src={require("../images/notes-icon-2.png")}
-                          width={20}
-                        ></img>
-                        {childNote.title}
-                      </div>
-                    );
-                  })}
-                  <textarea
+                  <div style={{ marginBottom: 20 }}>
+                    {this.state.childPages.map((childNote) => {
+                      return (
+                        <div className="editnote-content-pagelink-parent justify-content-between">
+                          <div
+                            className="editnote-content-pagelink"
+                            onClick={() => {
+                              this.props.changeRoute(childNote.note_id);
+                            }}
+                          >
+                            <img
+                              src={require("../images/notes-icon-2.png")}
+                              width={20}
+                            ></img>
+                            {childNote.title}
+                          </div>
+                          <div
+                            className="edinote-content-pagelink-delete"
+                            onClick={() =>
+                              this.deleteChildPage(childNote.note_id)
+                            }
+                          >
+                            <img
+                              src={require("../images/remove-icon.png")}
+                              width={22}
+                            ></img>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  {/* <textarea
                     id="editnote-content-textbox"
                     name="content"
                     className="editnote-content-textbox"
@@ -223,7 +433,20 @@ class EditNote extends Component {
                     value={this.state.content}
                     onChange={this.OnChangeInput}
                     ref={(c) => (this.textarea = c)}
-                  ></textarea>
+                  ></textarea> */}
+
+                  {this.state.blocks.map((block) => {
+                    return (
+                      <EditableBlock
+                        id={block.id}
+                        tag={block.tag}
+                        html={block.html}
+                        onChangeHandler={this.onChangeHandler}
+                        deleteBlock={this.deleteBlock}
+                        changeActiveElement={this.changeActiveElement}
+                      />
+                    );
+                  })}
                 </div>
               </div>
 
