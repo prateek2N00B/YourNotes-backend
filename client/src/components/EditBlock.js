@@ -1,14 +1,14 @@
 import React, { Component } from "react";
 import ContentEditable from "react-contenteditable";
 
-class EditableBlock extends Component {
+class EditBlock extends Component {
   constructor(props) {
     super(props);
     this.nameInput = React.createRef();
     this.state = {
       tag: "p",
       html: "",
-      placeholder: "type",
+      placeholder: "placeholder",
     };
   }
 
@@ -56,7 +56,7 @@ class EditableBlock extends Component {
   render() {
     return (
       <ContentEditable
-        className="Block"
+        className="EditBlock"
         innerRef={this.nameInput}
         html={this.state.html}
         tagName={this.state.tag}
@@ -69,4 +69,4 @@ class EditableBlock extends Component {
   }
 }
 
-export default EditableBlock;
+export default EditBlock;

@@ -14,7 +14,7 @@ app.use("/users-api", userRouter);
 app.use("/notes-api", notesRouter);
 app.use("/shared-notes-api", sharedNotesRouter);
 
-const URI = process.env.MONGODB_URI;
+const URI = process.env.MONGODB_URL;
 mongoose.connect(
   URI,
   {

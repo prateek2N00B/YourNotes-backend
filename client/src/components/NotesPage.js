@@ -55,7 +55,7 @@ class NotesPage extends Component {
         headers: { Authorization: token },
       });
       // return res.data;
-      console.log(res.data);
+      // console.log(res.data);
       this.setState({ sharedNotes: res.data });
     }
   };
@@ -66,12 +66,9 @@ class NotesPage extends Component {
   };
 
   async componentDidMount() {
-    // const token = localStorage.getItem("tokenStore");
-    // if (token) {
     await this.getNotes();
     await this.getSharedNotes();
-    console.log(this.state);
-    // }
+    // console.log(this.state);
 
     if (this.props.location.pathname === "/edit") {
       if (this.state.notes.length > 0) {
@@ -172,33 +169,35 @@ class NotesPage extends Component {
     let path = this.props.match.url;
     return (
       <Switch>
-        <div className="main-notes d-flex flex-row">
-          <Sidebar
-            changeRootNote={this.changeRootNote}
-            addNote={this.addNote}
-            id={this.state.activeNoteId}
-            notes={this.state.notes}
-            username={this.props.username}
-            sharedNotes={this.state.sharedNotes}
-            addSharedNote={this.addSharedNote}
-            deleteSharedNote={this.deleteSharedNote}
-          />
-          <section>
-            <Route
-              path={`${path}/:id`}
-              component={(props) => (
-                <EditNote
-                  {...props}
-                  notes={this.state.notes}
-                  changeRoute={this.changeRoute}
-                  createNote={this.createNote}
-                  getNotes={this.getNotes}
-                />
-              )}
-              exact
+        <React.Fragment>
+          <div className="main-notes d-flex flex-row">
+            <Sidebar
+              changeRootNote={this.changeRootNote}
+              addNote={this.addNote}
+              id={this.state.activeNoteId}
+              notes={this.state.notes}
+              username={this.props.username}
+              sharedNotes={this.state.sharedNotes}
+              addSharedNote={this.addSharedNote}
+              deleteSharedNote={this.deleteSharedNote}
             />
-          </section>
-        </div>
+            <section>
+              <Route
+                path={`${path}/:id`}
+                component={(props) => (
+                  <EditNote
+                    {...props}
+                    notes={this.state.notes}
+                    changeRoute={this.changeRoute}
+                    createNote={this.createNote}
+                    getNotes={this.getNotes}
+                  />
+                )}
+                exact
+              />
+            </section>
+          </div>
+        </React.Fragment>
       </Switch>
     );
   }

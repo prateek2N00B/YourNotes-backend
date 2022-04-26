@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import axios from "axios";
 
 class Sidebar extends Component {
   constructor(props) {
@@ -23,7 +22,7 @@ class Sidebar extends Component {
         </div>
         <div className="sidebar-titles">
           {this.props.notes.map((note) => {
-            if (note.parentPages.length == 0) {
+            if (note.parentPages.length === 0) {
               let temp = this.props.id === note._id;
               return (
                 <div
@@ -36,6 +35,7 @@ class Sidebar extends Component {
                   <img
                     src={require("../images/notes-icon.png")}
                     className={"sidebar-title-image"}
+                    alt="sidebar-title-icon"
                   ></img>
                   {note.title}
                 </div>
@@ -52,6 +52,7 @@ class Sidebar extends Component {
             <img
               src={require("../images/plus-icon.png")}
               className={"sidebar-title-plus-image"}
+              alt="sidebar-plus-icon"
               width={20}
             ></img>
             Add a page
@@ -75,6 +76,7 @@ class Sidebar extends Component {
                   <img
                     src={require("../images/notes-icon.png")}
                     className={"sidebar-title-image"}
+                    alt="sidebar-title-icon"
                   ></img>
                   {note.title}
                 </div>
@@ -86,6 +88,7 @@ class Sidebar extends Component {
                   <img
                     src={require("../images/remove-icon.png")}
                     width={22}
+                    alt="sidebar-delete-icon"
                   ></img>
                 </div>
               </div>
@@ -113,6 +116,7 @@ class Sidebar extends Component {
               src={require("../images/plus-icon.png")}
               className={"sidebar-title-plus-image"}
               width={20}
+              alt="sidebar-add-icon"
             ></img>
             Add shared page
           </div>

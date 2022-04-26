@@ -63,11 +63,11 @@ const loginUser = async (req, res) => {
 
     res.json({ token: token, username: user[0].username });
   } catch (err) {
-    return res.status(500).json({ msg: "this is called" });
+    return res.status(500).json({ msg: err.message });
   }
 };
 
-const verifiedToken = (req, res) => {
+const verifyToken = (req, res) => {
   try {
     const token = req.header("Authorization");
     if (!token) return res.json({ msg: false, username: "" });
@@ -87,6 +87,6 @@ const verifiedToken = (req, res) => {
 
 router.post("/register", registerUser);
 router.post("/login", loginUser);
-router.get("/verify", verifiedToken);
+router.get("/verify", verifyToken);
 
 module.exports = router;

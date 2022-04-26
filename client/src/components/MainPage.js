@@ -19,8 +19,10 @@ class MainPage extends Component {
           <Nav setLoginDetails={this.props.setLoginDetails} />
           <section>
             <Route path="/" component={Home} exact />
-            <Route path="/edit" component={() => (<NotesPage username={this.props.username}/>)} />
-            {/* <Route path="/create" component={temp_CreateNotes} exact /> */}
+            <Route
+              path="/edit"
+              component={() => <NotesPage username={this.props.username} />}
+            />
           </section>
         </div>
       </Router>
@@ -29,6 +31,3 @@ class MainPage extends Component {
 }
 
 export default MainPage;
-
-
-

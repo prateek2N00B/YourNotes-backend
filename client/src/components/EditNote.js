@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import axios from "axios";
-import autosize, { update } from "autosize";
+import autosize from "autosize";
 
-import EditableBlock from "./EditableBlock";
+import EditBlock from "./EditBlock";
 
 const unique_id = () => {
   return Date.now().toString(36);
@@ -99,7 +99,7 @@ class EditNote extends Component {
           parentPages: this.state.parentPagesIds,
         };
 
-        const res = await axios.put(`/notes-api/${this.state.id}`, newNote, {
+        await axios.put(`/notes-api/${this.state.id}`, newNote, {
           headers: { Authorization: token },
         });
         this.getNoteInfo();
@@ -208,68 +208,95 @@ class EditNote extends Component {
     }
   };
 
-  addNewHeadingBlock = async () => {
-    if (this.state.activeElement.ref != null) {
-      let newBlock = { id: unique_id(), tag: "h2", html: "" };
-      const blocks = this.state.blocks;
-      const index = blocks
-        .map((b) => b.id)
-        .indexOf(this.state.activeElement.id);
-      if (this.state.activeElement.ref.outerText == "") {
-        const updatedBlocks = [...blocks];
-        updatedBlocks[index].tag = "h2";
-        await this.setState({ blocks: updatedBlocks });
-        this.state.activeElement.ref.focus();
-      } else {
-        const updatedBlocks = [...blocks];
-        updatedBlocks.splice(index + 1, 0, newBlock);
-        await this.setState({ blocks: updatedBlocks }, () => {
-          if (this.state.activeElement.ref.nextElementSibling) {
-            this.state.activeElement.ref.nextElementSibling.focus();
-          }
-        });
-      }
-      this.dropdownClicked();
-      this.forceUpdate();
-    }
-  };
+  // addNewHeadingBlock = async () => {
+  //   if (this.state.activeElement.ref != null) {
+  //     let newBlock = { id: unique_id(), tag: "h2", html: "" };
+  //     const blocks = this.state.blocks;
+  //     const index = blocks
+  //       .map((b) => b.id)
+  //       .indexOf(this.state.activeElement.id);
+  //     if (this.state.activeElement.ref.outerText == "") {
+  //       const updatedBlocks = [...blocks];
+  //       updatedBlocks[index].tag = "h2";
+  //       await this.setState({ blocks: updatedBlocks });
+  //       this.state.activeElement.ref.focus();
+  //     } else {
+  //       const updatedBlocks = [...blocks];
+  //       updatedBlocks.splice(index + 1, 0, newBlock);
+  //       await this.setState({ blocks: updatedBlocks }, () => {
+  //         if (this.state.activeElement.ref.nextElementSibling) {
+  //           this.state.activeElement.ref.nextElementSibling.focus();
+  //         }
+  //       });
+  //     }
+  //     this.dropdownClicked();
+  //     this.forceUpdate();
+  //   }
+  // };
 
-  addNewSubHeadingBlock = async () => {
-    if (this.state.activeElement.ref != null) {
-      let newBlock = { id: unique_id(), tag: "h3", html: "" };
-      const blocks = this.state.blocks;
-      const index = blocks
-        .map((b) => b.id)
-        .indexOf(this.state.activeElement.id);
-      if (this.state.activeElement.ref.outerText == "") {
-        const updatedBlocks = [...blocks];
-        updatedBlocks[index].tag = "h3";
-        await this.setState({ blocks: updatedBlocks });
-        this.state.activeElement.ref.focus();
-      } else {
-        const updatedBlocks = [...blocks];
-        updatedBlocks.splice(index + 1, 0, newBlock);
-        await this.setState({ blocks: updatedBlocks }, () => {
-          if (this.state.activeElement.ref.nextElementSibling) {
-            this.state.activeElement.ref.nextElementSibling.focus();
-          }
-        });
-      }
-      this.dropdownClicked();
-      this.forceUpdate();
-    }
-  };
+  // addNewSubHeadingBlock = async () => {
+  //   if (this.state.activeElement.ref != null) {
+  //     let newBlock = { id: unique_id(), tag: "h3", html: "" };
+  //     const blocks = this.state.blocks;
+  //     const index = blocks
+  //       .map((b) => b.id)
+  //       .indexOf(this.state.activeElement.id);
+  //     if (this.state.activeElement.ref.outerText == "") {
+  //       const updatedBlocks = [...blocks];
+  //       updatedBlocks[index].tag = "h3";
+  //       await this.setState({ blocks: updatedBlocks });
+  //       this.state.activeElement.ref.focus();
+  //     } else {
+  //       const updatedBlocks = [...blocks];
+  //       updatedBlocks.splice(index + 1, 0, newBlock);
+  //       await this.setState({ blocks: updatedBlocks }, () => {
+  //         if (this.state.activeElement.ref.nextElementSibling) {
+  //           this.state.activeElement.ref.nextElementSibling.focus();
+  //         }
+  //       });
+  //     }
+  //     this.dropdownClicked();
+  //     this.forceUpdate();
+  //   }
+  // };
 
-  addNewTextBlock = async () => {
+  // addNewTextBlock = async () => {
+  //   if (this.state.activeElement.ref != null) {
+  //     let newBlock = { id: unique_id(), tag: "p", html: "" };
+  //     const blocks = this.state.blocks;
+  //     const index = blocks
+  //       .map((b) => b.id)
+  //       .indexOf(this.state.activeElement.id);
+  //     if (this.state.activeElement.ref.outerText == "") {
+  //       const updatedBlocks = [...blocks];
+  //       updatedBlocks[index].tag = "p";
+  //       await this.setState({ blocks: updatedBlocks }, () => {
+  //         this.state.activeElement.ref.focus();
+  //       });
+  //     } else {
+  //       const updatedBlocks = [...blocks];
+  //       updatedBlocks.splice(index + 1, 0, newBlock);
+  //       await this.setState({ blocks: updatedBlocks }, () => {
+  //         if (this.state.activeElement.ref.nextElementSibling) {
+  //           this.state.activeElement.ref.nextElementSibling.focus();
+  //         }
+  //       });
+  //     }
+  //     this.dropdownClicked();
+  //     this.forceUpdate();
+  //   }
+  // };
+
+  addNewBlock = async (tag) => {
     if (this.state.activeElement.ref != null) {
-      let newBlock = { id: unique_id(), tag: "p", html: "" };
+      let newBlock = { id: unique_id(), tag: tag, html: "" };
       const blocks = this.state.blocks;
       const index = blocks
         .map((b) => b.id)
         .indexOf(this.state.activeElement.id);
       if (this.state.activeElement.ref.outerText == "") {
         const updatedBlocks = [...blocks];
-        updatedBlocks[index].tag = "p";
+        updatedBlocks[index].tag = tag;
         await this.setState({ blocks: updatedBlocks }, () => {
           this.state.activeElement.ref.focus();
         });
@@ -290,7 +317,7 @@ class EditNote extends Component {
   changeActiveElement = async (id, ref) => {
     let temp = { ref: ref, id: id };
     await this.setState({ activeElement: temp }, () => {
-      console.log(this.state.activeElement.id, this.state.activeElement.ref);
+      // console.log(this.state.activeElement.id, this.state.activeElement.ref);
     });
   };
 
@@ -322,10 +349,11 @@ class EditNote extends Component {
               <div className="editnote-header">
                 <div className="editnote-dropdown-parent">
                   <img
-                    src={require("../images/square-plus-icon.png")}
+                    src={require("../images/dropdown-icon.png")}
                     className={"editnote-dropdown-plus-icon"}
                     width={20}
                     onClick={this.dropdownClicked}
+                    alt="dropdown-icon"
                   ></img>
                   {this.state.dropdownVisible ? (
                     <div className="editnote-dropdown-content">
@@ -339,12 +367,12 @@ class EditNote extends Component {
                         <div className="editnote-dropdown-text">
                           <p className="editnote-dropdown-head">Link to page</p>
                           <p className="editnote-dropdown-subhead">
-                            Add a child page
+                            Add a child page.
                           </p>
                         </div>
                       </a>
 
-                      <a onClick={() => this.addNewHeadingBlock()}>
+                      <a onClick={() => this.addNewBlock("h2")}>
                         <div className="editnote-dropdown-vis">H1</div>
                         <div className="editnote-dropdown-text">
                           <p className="editnote-dropdown-head">Heading</p>
@@ -354,7 +382,7 @@ class EditNote extends Component {
                         </div>
                       </a>
 
-                      <a onClick={() => this.addNewSubHeadingBlock()}>
+                      <a onClick={() => this.addNewBlock("h3")}>
                         <div className="editnote-dropdown-vis">H2</div>
                         <div className="editnote-dropdown-text">
                           <p className="editnote-dropdown-head">Sub Heading</p>
@@ -364,7 +392,7 @@ class EditNote extends Component {
                         </div>
                       </a>
 
-                      <a onClick={() => this.addNewTextBlock()}>
+                      <a onClick={() => this.addNewBlock("p")}>
                         <div className="editnote-dropdown-vis">Aa</div>
                         <div className="editnote-dropdown-text">
                           <p className="editnote-dropdown-head">Text</p>
@@ -395,7 +423,10 @@ class EditNote extends Component {
                   <div style={{ marginBottom: 20 }}>
                     {this.state.childPages.map((childNote) => {
                       return (
-                        <div className="editnote-content-pagelink-parent justify-content-between">
+                        <div
+                          className="editnote-content-pagelink-parent justify-content-between"
+                          key={childNote.note_id}
+                        >
                           <div
                             className="editnote-content-pagelink"
                             onClick={() => {
@@ -423,21 +454,11 @@ class EditNote extends Component {
                       );
                     })}
                   </div>
-                  {/* <textarea
-                    id="editnote-content-textbox"
-                    name="content"
-                    className="editnote-content-textbox"
-                    placeholder="Type your notes here"
-                    rows="23"
-                    required
-                    value={this.state.content}
-                    onChange={this.OnChangeInput}
-                    ref={(c) => (this.textarea = c)}
-                  ></textarea> */}
 
                   {this.state.blocks.map((block) => {
                     return (
-                      <EditableBlock
+                      <EditBlock
+                        key={block.id}
                         id={block.id}
                         tag={block.tag}
                         html={block.html}
@@ -462,7 +483,3 @@ class EditNote extends Component {
 }
 
 export default EditNote;
-
-{
-  // task 3: fix the share notes part
-}
