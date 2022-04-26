@@ -71,6 +71,11 @@ class Home extends Component {
                   <h5>{note.title}</h5>
                 </div>
                 <div className="card-text">
+                  {note.blocks.map((block) => {
+                    if (block.tag == "p") return <p>{block.html}</p>;
+                    else if (block.tag == "h2") return <h2>{block.html}</h2>;
+                    else if (block.tag == "h3") return <h3>{block.html}</h3>;
+                  })}
                   <p>{note.content}</p>
                 </div>
                 <p className="card-date">last edited {format(note.date)}</p>
