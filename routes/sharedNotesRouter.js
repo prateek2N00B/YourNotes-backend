@@ -1,11 +1,36 @@
 const router = require("express").Router();
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
+const log4js = require("log4js");
+
+log4js.configure({
+  appenders: {
+    error: { type: "file", filename: "log/notes_error.log" },
+    info: { type: "file", filename: "log/notes_info.log" },
+  },
+  categories: {
+    default: {
+      appenders: ["info"],
+      level: "info",
+    },
+    error: {
+      appenders: ["error"],
+      level: "error",
+    },
+    info: {
+      appenders: ["info"],
+      level: "info",
+    },
+  },
+});
+
+const infoLogger = log4js.getLogger("info");
+const errorLogger = log4js.getLogger("error");
 
 const auth = (req, res, next) => {
   try {
     const token = req.header("Authorization");
-    console.log(token);
+    // console.log(token);
     if (!token) return res.status(400).json({ msg: "Invalid Authentication" });
 
     jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
@@ -62,8 +87,10 @@ const addToShareNotes = async (req, res) => {
         }
       );
     }
+    infoLogger.info(`sharedNote added - ${req.user.id}`);
     res.json({ msg: "sharenote added successfully" });
   } catch (err) {
+    errorLogger.error(err.message);
     return res.status(500).json({ msg: err.message });
   }
 };
@@ -76,7 +103,9 @@ const getSharedNotes = async (req, res) => {
     } else {
       res.json(userShareNotes[0].othersNotes);
     }
+    infoLogger.info(`get sharedNotes - ${req.user.id}`);
   } catch (err) {
+    errorLogger.error(err.message);
     return res.status(500).json({ msg: err.message });
   }
 };
@@ -93,10 +122,11 @@ const deleteSharedNote = async (req, res) => {
           othersNotes: othersNotes,
         }
       );
-
+      infoLogger.info(`delete sharedNote - ${req.user.id}`);
       res.json("Shared Note delete");
     }
   } catch (err) {
+    errorLogger.error(err.message);
     return res.status(500).json({ msg: err.message });
   }
 };
