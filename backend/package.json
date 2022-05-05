@@ -4,10 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "concurrently \"cd client && npm run start\" \"nodemon server.js\" ",
-    "server": "nodemon server.js",
-    "client": "cd client && npm run start",
-    "install": "concurrently \"cd client && npm install\" \"npm install\" "
+    "start": "nodemon server.js"
   },
   "keywords": [],
   "author": "",
@@ -19,8 +16,8 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
-    "log4js": "^6.4.6",
-    "mongoose": "^5.9.27"
+    "mongoose": "^5.9.27",
+    "log4js": "^6.4.6"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"
