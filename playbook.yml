@@ -1,0 +1,12 @@
+- name: Pull and Run Docker Image
+  hosts: Azure-VM-ubuntu-20
+  tasks:
+    - name: pull notesapp-backend image
+      docker_image:
+        name: devpatel29/notesapp-backend
+        source: pull
+    - name: run docker image
+      docker_container:
+        name: notesapp-backend-container
+        image: devpatel29/notesapp-backend
+        ports: "443:5000"

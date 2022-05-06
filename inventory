@@ -1,0 +1,2 @@
+[Azure-VM-ubuntu-20]
+20.213.235.172 ansible_user=devpatel
