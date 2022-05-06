@@ -7,6 +7,6 @@
         source: pull
     - name: run docker image
       docker_container:
-        name: notesapp-backend-container
+        name: notesapp-backend
         image: devpatel29/notesapp-backend
         ports: "443:5000"
