@@ -113,7 +113,7 @@ const getNotes = async (req, res) => {
   try {
     const notes = await Notes.find({ user_id: req.user.id });
     infoLogger.info(`getNotes - ${req.user.id}`);
-    res.json(notes);
+    res.status(200).json(notes);
   } catch (err) {
     errorLogger.error(err.message);
     return res.status(500).json({ msg: err.message });
@@ -135,7 +135,7 @@ const createNotes = async (req, res) => {
 
     await newNote.save();
     infoLogger.info(`createNote - ${req.user.id}`);
-    res.json({ msg: "Created a Note", id: newNote._id });
+    res.status(200).json({ msg: "Created a Note", id: newNote._id });
   } catch (err) {
     errorLogger.error(err.message);
     return res.status(500).json({ msg: err.message });
@@ -154,7 +154,7 @@ const deleteNotes = async (req, res) => {
     await deleteRec(req.params.id);
     // await Notes.findByIdAndDelete(req.params.id);
     infoLogger.info(`deleteNote - ${req.params.id}`);
-    res.json({ msg: "Deleted the Note" });
+    res.status(200).json({ msg: "Deleted the Note" });
   } catch (err) {
     return res.status(500).json({ msg: err.message });
   }
@@ -174,7 +174,7 @@ const updateNote = async (req, res) => {
       }
     );
     infoLogger.info(`updateNote - ${req.params.id}`);
-    res.json({ msg: "Notes Updated" });
+    res.status(200).json({ msg: "Notes Updated" });
   } catch (err) {
     errorLogger.error(err.message);
     return res.status(500).json({ msg: err.message });
@@ -185,18 +185,16 @@ const getNote = async (req, res) => {
   try {
     const note = await Notes.findById(req.params.id);
     infoLogger.info(`getNote - ${req.params.id}`);
-    res.json(note);
+    res.status(200).json(note);
   } catch (err) {
     errorLogger.error(err.message);
-    // return res.status(500).json({ msg: err.message });
-    return res.json("Note does not exists");
+    return res.status(500).json("Note does not exists");
   }
 };
 
 const getTitle = async (req, res) => {
   try {
     let ans = [];
-    // console.log(req.body);
     for (const i of req.body.notes_id) {
       const note = await Notes.findById(i);
       if (note) {
@@ -204,18 +202,17 @@ const getTitle = async (req, res) => {
       }
     }
     infoLogger.info(`getTitle`);
-    res.json(ans);
+    res.status(200).json(ans);
   } catch (err) {
     errorLogger.error(err.message);
-    return res.json("Note does not exists");
+    return res.status(500).json("Note does not exists");
   }
 };
 
 const deleteChildPage = async (req, res) => {
   try {
     const note = await Notes.findById(req.params.id);
-    // console.log(note);
-    if (!note) return res.json("Parent Note does not exists");
+    if (!note) return res.status(400).json("Parent Note does not exists");
 
     let childPages = note.childPages;
     childPages = childPages.filter((item) => item !== req.body.childPage_id);
@@ -228,7 +225,7 @@ const deleteChildPage = async (req, res) => {
     );
 
     infoLogger.info(`deleteChildPage - ${req.params.id}`);
-    res.json("ChildPage deleted");
+    res.status(200).json("ChildPage deleted");
   } catch (err) {
     errorLogger.error(err.message);
     return res.status(500).json({ msg: err.message });

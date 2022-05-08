@@ -68,7 +68,7 @@ const registerUser = async (req, res) => {
 
     await newUser.save();
     infoLogger.info("Sign Up Successfull");
-    res.json({ msg: "Sign Up Successfull" });
+    res.status(200).json({ msg: "Sign Up Successfull" });
   } catch (err) {
     errorLogger.error(err.message);
     return res.status(500).json({ msg: err.message });
@@ -97,7 +97,7 @@ const loginUser = async (req, res) => {
     });
 
     infoLogger.info("Login Successfull");
-    res.json({ token: token, username: user[0].username });
+    res.status(200).json({ token: token, username: user[0].username });
   } catch (err) {
     errorLogger.error(err.message);
     return res.status(500).json({ msg: err.message });
@@ -107,16 +107,16 @@ const loginUser = async (req, res) => {
 const verifyToken = (req, res) => {
   try {
     const token = req.header("Authorization");
-    if (!token) return res.json({ msg: false, username: "" });
+    if (!token) return res.status(400).json({ msg: false, username: "" });
 
     jwt.verify(token, process.env.TOKEN_SECRET, async (err, verified) => {
-      if (err) return res.json({ msg: false, username: "" });
+      if (err) return res.status(400).json({ msg: false, username: "" });
 
       const user = await Users.findById(verified.id);
-      if (!user) return res.json({ msg: false, username: "" });
+      if (!user) return res.status(400).json({ msg: false, username: "" });
 
       infoLogger.info("Token verification successfull");
-      return res.json({ msg: true, username: user.username });
+      return res.status(200).json({ msg: true, username: user.username });
     });
   } catch (err) {
     errorLogger.error(err.message);
