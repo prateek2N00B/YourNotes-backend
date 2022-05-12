@@ -1,14 +1,14 @@
 - name: Pull and Run Docker Image
   hosts: Azure-VM-ubuntu-20
   tasks:
-#     - name: stop already running container
-#       docker_container:
-#         name: notesapp-backend
-#         state: stopped
-#     - name: remove container
-#       docker_container:
-#         name: notesapp-backend
-#         state: absent
+    - name: stop already running container
+      docker_container:
+        name: notesapp-backend
+        state: stopped
+    - name: remove container
+      docker_container:
+        name: notesapp-backend
+        state: absent
     - name: pull notesapp-backend image
       docker_image:
         name: prateek12307/notesapp-backend
