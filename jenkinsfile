@@ -1,0 +1,40 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Github pull backend') {
+            steps {
+                git branch: 'main', credentialsId: 'git_credentials', url: 'https://github.com/prateek2N00B/YourNotes-backend.git'
+            }
+        }
+         stage('NPM test backend'){
+            steps{
+                script{
+                    sh 'npm i && npm run test'
+                }
+            }
+        }
+        stage('Docker build backend') {
+            steps{
+                script {
+                    imageName=docker.build "prateek12307/notesapp-backend"
+                }
+            }
+        }
+        stage('Docker push image backend') {
+            steps {
+                script{
+                    docker.withRegistry('','docker_cred'){
+                    imageName.push()
+                    }
+                }    
+            }
+        }
+        stage('Ansible pull and run image in Azure production') {
+            steps {
+                ansiblePlaybook becomeUser: null, colorized: true, disableHostKeyChecking: true, installation: 'Ansible', inventory: 'inventory', playbook: 'playbook.yml', sudoUser: null
+            }    
+        }
+        
+    }
+}
