@@ -11,10 +11,10 @@
         state: absent
     - name: pull notesapp-backend image
       docker_image:
-        name: devpatel29/notesapp-backend
+        name: prateek12307/notesapp-backend
         source: pull
     - name: run docker image
       docker_container:
         name: notesapp-backend
-        image: devpatel29/notesapp-backend
+        image: prateek12307/notesapp-backend
         ports: "5000:5000"
